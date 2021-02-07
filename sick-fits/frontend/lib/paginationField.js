@@ -4,10 +4,9 @@ export default function PaginationField() {
   return {
     keyArgs: false, // tells Apollo we'll take care of everything?
     read(existing = [], { args, cache }) {
-      console.log(args, existing, cache);
       const { skip, first } = args;
 
-      // read number of items on page from cahce
+      // read number of items on page from cache
       const data = cache.readQuery({ query: PAGINATION_QUERY });
       const count = data?._allProductsMeta?.count;
       const page = skip / first + 1;
