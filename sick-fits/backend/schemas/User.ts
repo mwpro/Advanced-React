@@ -10,6 +10,14 @@ export const User = list({
     }),
     email: text({ isRequired: true, isUnique: true }),
     password: password(),
-    // todo add roles, cart, orders
+    cart: relationship({
+      ref: 'CartItem.user',
+      many: true,
+      ui: {
+        createView: { fieldMode: 'hidden' },
+        itemView: { fieldMode: 'hidden' },
+      },
+    }),
+    // todo add roles, orders
   },
 });
