@@ -18,6 +18,10 @@ export const User = list({
         itemView: { fieldMode: 'hidden' },
       },
     }),
-    // todo add roles, orders
+    orders: relationship({
+      ref: 'Order.user',
+      many: true,
+    }),
+    // todo add roles,
   },
 });

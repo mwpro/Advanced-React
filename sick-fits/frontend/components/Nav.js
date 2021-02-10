@@ -20,7 +20,10 @@ export default function Nav() {
           <button type="button" onClick={openCart}>
             My Cart{' '}
             <CartCount
-              count={user.cart.reduce((acc, item) => acc + item.quantity, 0)}
+              count={user.cart.reduce(
+                (acc, item) => acc + (item.product ? item.quantity : 0),
+                0
+              )}
             />
           </button>
         </>
