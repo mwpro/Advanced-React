@@ -6,9 +6,15 @@ import {
   relationship,
   virtual,
 } from '@keystone-next/fields';
+import { isSignedIn, rules } from '../access';
 
 export const Order = list({
-  // todo access
+  access: {
+    create: isSignedIn,
+    read: rules.canOrder,
+    update: () => false,
+    delete: () => false,
+  },
   fields: {
     // label: virtual({
     //   extendGraphQLTypes: 'String',

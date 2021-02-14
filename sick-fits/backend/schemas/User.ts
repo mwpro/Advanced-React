@@ -1,9 +1,19 @@
 import { list } from '@keystone-next/keystone/schema';
 import { text, password, relationship } from '@keystone-next/fields';
+import { rules, permissions } from '../access';
 
 export const User = list({
   // todo access:
-  // todo ui:
+  access: {
+    create: true,
+    read: rules.canManageUsers,
+    update: rules.canManageUsers,
+    delete: permissions.canManageUsers,
+  },
+  ui: {
+    hideCreate: (args) => !permissions.canManageUsers(args),
+    hideDelete: (args) => !permissions.canManageUsers(args),
+  },
   fields: {
     name: text({
       isRequired: true,
@@ -22,6 +32,17 @@ export const User = list({
       ref: 'Order.user',
       many: true,
     }),
-    // todo add roles,
+    role: relationship({
+      ref: 'Role.assignedTo',
+      access: {
+        create: permissions.canManageUsers,
+        update: permissions.canManageUsers,
+      },
+      // todo add access control
+    }),
+    products: relationship({
+      ref: 'Product.user',
+      many: true,
+    }),
   },
 });
