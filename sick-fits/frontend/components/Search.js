@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import { useLazyQuery } from '@apollo/client';
 import debounce from 'lodash.debounce';
 import { useRouter } from 'next/dist/client/router';
+import { useRef } from 'react';
 import { SearchStyles, DropDown, DropDownItem } from './styles/DropDown';
 
 const SEARCH_PRODUCTS_QUERY = gql`
@@ -34,7 +35,21 @@ export default function Search() {
       fetchPolicy: 'no-cache',
     }
   );
-  const findItemsButChill = debounce(findItems, 350); // looks like debounce is restarted on every re-render of search component
+
+  // looks like debounce is restarted on every re-render of search component
+  // const findItemsButChill = debounce((args) => {
+  //   console.log('debounce timeout');
+  //   findItems(args);
+  // }, 1000);
+
+  // https://github.com/downshift-js/downshift/issues/347#issuecomment-469531762
+  const findItemsButChill = useRef(null);
+  if (!findItemsButChill.current) {
+    findItemsButChill.current = debounce((args) => {
+      console.log('debounce timeout');
+      findItems(args);
+    }, 1000);
+  }
 
   const items = data?.searchTerms || [];
 
@@ -51,7 +66,8 @@ export default function Search() {
     items,
     onInputValueChange() {
       console.log('input changed');
-      findItemsButChill({
+      // findItemsButChill({
+      findItemsButChill.current({
         variables: {
           searchTerm: inputValue,
         },
